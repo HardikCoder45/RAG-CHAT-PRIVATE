@@ -1,5 +1,5 @@
 
-from langchain_community.embeddings import GooglePalmEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
  
 class embeddings:
  
@@ -10,7 +10,7 @@ class embeddings:
   pass
  def google(self):
     
-    google = GooglePalmEmbeddings(model="text-embedding-3-small",google_api_key="AIzaSyAOfp3_LGPstia9Y-llENk85oY4SKDoTGY")
+    google = GoogleGenerativeAIEmbeddings(model="text-embedding-3-small",google_api_key="AIzaSyAOfp3_LGPstia9Y-llENk85oY4SKDoTGY")
     return google
  
  

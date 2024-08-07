@@ -201,11 +201,8 @@ def agent(vector):
         cse_id, Api_Keys = data['apis'][4]['Google-Cse-Id'], data['apis'][0]['google-api-key']
         
         # Set up LLM model
-        if llm_model == "gpt-3.5-turbo":
-            llm = Models().gpt_3_5()
-        elif llm_model == "gpt-4o-mini":
-            llm = Models().gpt4o()
-        elif llm_model == "llama3-70b-8192":
+         
+        if llm_model == "llama3-70b-8192":
             llm = Models().llama()
         elif llm_model == "mistral-large-2407":
             llm = Models().mistral()
@@ -284,7 +281,7 @@ if st.button('Make Vector Database'):
  
   
 # LLM model and chain setup
-llm_model = st.selectbox("Select LLM Model", ["gpt-3.5-turbo" , "gpt-4o-mini", "llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")
+llm_model = st.selectbox("Select LLM Model", ["llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")
 chain_type = st.selectbox("Select Chain Type", ["Agentic", "Retrieval"], index=0, key="chain_type")
 
 # Chain or agent setup 

@@ -1,0 +1,52 @@
+
+{
+ 
+    "models":[
+    {
+        "model":"gpt-3.5-turbo",
+        "api-key":"sk-proj-DsXNsNB9w3k7SiPUSX3nT3BlbkFJOnxwV4s7FPGLxNPWMPnl"
+    },
+    {
+        "model":"gpt-4o-mini",
+        "api-key":"sk-proj-DsXNsNB9w3k7SiPUSX3nT3BlbkFJOnxwV4s7FPGLxNPWMPnl"
+    },
+    {
+        "model":"gemini-pro",
+        "api-key":"AIzaSyAOfp3_LGPstia9Y-llENk85oY4SKDoTGY"
+    },
+    {
+        "model":"llama3-70b-8192",
+        "api-key":"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"
+    },
+    {
+        "model":"mistral-large-2407",
+        "api-key":"t32Oa5zmTkPXSR3QWLQ0GvWTkbHLudQ7"
+    },
+    {
+        "model":"gemma2-9b-it",
+        "api-key":"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"
+    }
+    
+    ],
+    "vector-db":[
+        "Cassandra",
+        "ObjectBox",
+        "chroma",
+        "Faiss"
+    
+    ],
+    "embeddings":[
+        "text-embedding-3-large",
+        "GooglePalmEmbeddings",
+        "HuggingFaceEmbeddings"
+    
+    ],
+    "apis":[
+        {"google-api-key":"AIzaSyAOfp3_LGPstia9Y-llENk85oY4SKDoTGY"},
+        {"OpenAi-api-key":"sk-proj-DsXNsNB9w3k7SiPUSX3nT3BlbkFJOnxwV4s7FPGLxNPWMPnl"},
+        {"Mistral-api-key":"t32Oa5zmTkPXSR3QWLQ0GvWTkbHLudQ7"},
+        {"groq-api-key":"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"},
+        {"Google-Cse-Id":"90b4cf13cab464ea7"}
+    
+    ]
+    }

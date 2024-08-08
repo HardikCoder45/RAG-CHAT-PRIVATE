@@ -13,7 +13,7 @@ class AgentExecutorWrapper:
     def create_agent(  model, db, google_api, google_cse_id):
      try:
         # Initialize Google Search API Wrapper
-        search = GoogleSearchAPIWrapper(google_api_key=google_api, google_cse_id=google_cse_id, k=3)
+        search = GoogleSearchAPIWrapper(google_api_key="AIzaSyBfk4XNwD-S0HHYn8FfDKbX1t50qV5cGJ8", google_cse_id="747b14f9c88af4fd9", k=3)
 
         # Define Google Search Tool
         google_tool = Tool(

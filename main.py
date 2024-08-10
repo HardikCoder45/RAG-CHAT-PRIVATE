@@ -9,6 +9,7 @@ import streamlit as st
 from streamlit_chat import message
 from langchain_core.load import dumpd, dumps, load, loads
 from langchain.vectorstores import FAISS
+import os
 # Page configuration
 st.set_page_config(
     page_title="RAG Chatbot",
@@ -266,6 +267,7 @@ elif input_type == "Webpage":
     webpage_url = st.text_input("Enter URL:", key="webpage_url", placeholder="Enter the URL of the webpage")
 st.markdown("</div>", unsafe_allow_html=True)
 
+
 inputs_ = st.text_input('Please write the vector db name here......')
 
  
@@ -286,6 +288,8 @@ if st.button('Make Vector Database'):
     else:
         st.error("Please provide data either in the form of a PDF or a webpage.")
 
+
+st.markdown("Saved Vector Databases")
 db_names = os.listdir('vector-local-db')
 columns = st.columns(1)
 print(columns)

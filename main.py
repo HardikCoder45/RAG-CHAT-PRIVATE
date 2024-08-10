@@ -8,7 +8,7 @@ import json
 import streamlit as st
 from streamlit_chat import message
 from langchain_core.load import dumpd, dumps, load, loads
- 
+from langchain.vectorstores import FAISS
 # Page configuration
 st.set_page_config(
     page_title="RAG Chatbot",
@@ -171,12 +171,19 @@ def Vector_db():
          
         
         # Set up vector database
-        if vector_databases == "objectbox":
-            vector_database = vector_db(Embeddings, docs[1]).objectBox()
-        elif vector_databases == "Faiss":
+ 
+        if vector_databases == "Faiss":
             vector_database = vector_db(Embeddings, docs[1]).Faiss()
-        elif vector_databases == "Chroma":
-            vector_database = vector_db(Embeddings, docs[1]).chroma()
+ 
+        if vector_database[1]:
+                if inputs_ :
+                 vector_database[1].save_local(f'vector-local-db/{inputs_}')
+                 print(os.listdir("vector-local-db"))
+                else:
+                    st.error('Cannot save the vector db, no file name given.....')
+                    
+        else:
+            st.error("failed to save vector db")
         
         print(vector_database)
         # Handle vector database setup errors
@@ -259,7 +266,7 @@ elif input_type == "Webpage":
     webpage_url = st.text_input("Enter URL:", key="webpage_url", placeholder="Enter the URL of the webpage")
 st.markdown("</div>", unsafe_allow_html=True)
 
- 
+inputs_ = st.text_input('Please write the vector db name here......')
 
  
 # Vector database setting up button
@@ -278,7 +285,20 @@ if st.button('Make Vector Database'):
              
     else:
         st.error("Please provide data either in the form of a PDF or a webpage.")
- 
+
+db_names = os.listdir('vector-local-db')
+columns = st.columns(1)
+print(columns)
+
+with columns[0]:
+ for i in db_names:
+     if st.button(i):
+          Embeddings = embeddings().google()
+          st.session_state.vectordb = FAISS.load_local(f"./vector-local-db/{i}",Embeddings,allow_dangerous_deserialization=True)
+          if st.session_state.vectordb:
+              st.success('Successfully Loaded vector database.')
+          else:
+              st.error('Failed to create get database')
   
 # LLM model and chain setup
 llm_model = st.selectbox("Select LLM Model", ["llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")

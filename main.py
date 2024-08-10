@@ -11,6 +11,9 @@ from langchain_core.load import dumpd, dumps, load, loads
 from langchain.vectorstores import FAISS
 import os
 # Page configuration
+
+
+
 st.set_page_config(
     page_title="RAG Chatbot",
     page_icon=":robot:",
@@ -137,22 +140,23 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
+ 
 # Error handling variable
-Error = ""
- 
 
- 
 
+
+        
+def main(user_id):
 # Function to set up vector database
-def Vector_db():
+ Error = ""
+ def Vector_db():
     global Error
     try:
         # Save PDF to a temporary file
         if input_type == "PDF":
             with open("temp.pdf", "wb") as f:
                 f.write(pdf_file.getbuffer())
-                
+        print(pdf_file)
         # Load documents
         if input_type == "Webpage":
             docs = Loaders().webLoader(webpage_url)
@@ -172,13 +176,15 @@ def Vector_db():
          
         
         # Set up vector database
- 
-        if vector_databases == "Faiss":
-            vector_database = vector_db(Embeddings, docs[1]).Faiss()
- 
+         
+        
+        vector_database = vector_db(Embeddings, docs[1]).Faiss()
+            
+        
+
         if vector_database[1]:
                 if inputs_ :
-                 vector_database[1].save_local(f'vector-local-db/{inputs_}')
+                 vector_database[1].save_local(f'vector-local-db/{user_id}/{inputs_}')
                  print(os.listdir("vector-local-db"))
                 else:
                     st.error('Cannot save the vector db, no file name given.....')
@@ -200,7 +206,7 @@ def Vector_db():
         return None
 
 # Function to set up agent or retrieval chain
-def agent(vector):
+ def agent(vector):
     global Error
     try:
         # Load model configuration
@@ -234,7 +240,7 @@ def agent(vector):
         return None
 
 # Function to predict answer
-def predict_answer():
+ def predict_answer():
     global Error
     try:
         # Predict answer based on chain type
@@ -249,30 +255,34 @@ def predict_answer():
         return None
 
 # Title and description
-st.markdown("# Welcome to the RAG-CHAT", unsafe_allow_html=True)
-st.markdown("### Your intelligent assistant powered by Retrieval-Augmented Generation", unsafe_allow_html=True)
+ st.markdown("# Welcome to the RAG-CHAT", unsafe_allow_html=True)
+ st.markdown("### Your intelligent assistant powered by Retrieval-Augmented Generation", unsafe_allow_html=True)
 
 # Input, embeddings, and vector database
-st.markdown("<div class='navbar-container'>", unsafe_allow_html=True)
-input_type = st.selectbox("Select Input Type", ["Webpage", "PDF"], index=0, key="input_type")
-embeddings_model = st.selectbox("Select Embeddings Model", ["text-embedding-3-small"], index=0, key="embeddings")
-vector_databases = st.selectbox("Select Vector Database", ["Faiss", "Chroma","objectbox"], index=0, key="vector_db")
-st.markdown("</div>", unsafe_allow_html=True)
+ st.markdown("<div class='navbar-container'>", unsafe_allow_html=True)
+ input_type = st.selectbox("Select Input Type", ["Webpage", "PDF"], index=0, key="input_type")
+
+
+ st.markdown("</div>", unsafe_allow_html=True)
+
+
+         
+    
+
 
 # Checking if input is PDF or webpage
-st.markdown("<div class='pdf-url-container'>", unsafe_allow_html=True)
-if input_type == "PDF":
+ st.markdown("<div class='pdf-url-container'>", unsafe_allow_html=True)
+ if input_type == "PDF":
     pdf_file = st.file_uploader("Upload PDF", type=["pdf"], key="pdf_upload")
-elif input_type == "Webpage":
+ elif input_type == "Webpage":
     webpage_url = st.text_input("Enter URL:", key="webpage_url", placeholder="Enter the URL of the webpage")
-st.markdown("</div>", unsafe_allow_html=True)
+ st.markdown("</div>", unsafe_allow_html=True)
 
-
-inputs_ = st.text_input('Please write the vector db name here......')
+ inputs_ = st.text_input("Vector database....",placeholder='Please write the vector db name here......',)
 
  
 # Vector database setting up button
-if st.button('Make Vector Database'):
+ if st.button('Make Vector Database'):
     if input_type:
          
         st.session_state.vectordb = Vector_db()
@@ -287,31 +297,31 @@ if st.button('Make Vector Database'):
              
     else:
         st.error("Please provide data either in the form of a PDF or a webpage.")
+ 
+ st.markdown("Your Vector DataBases")
+ db_names = os.listdir(f'./vector-local-db/{user_id}')
+ columns = st.columns(1)
+ print(columns)
 
-
-st.markdown("Saved Vector Databases")
-db_names = os.listdir('vector-local-db')
-columns = st.columns(1)
-print(columns)
-
-with columns[0]:
- for i in db_names:
+ with columns[0]:
+  for i in db_names:
      if st.button(i):
           Embeddings = embeddings().google()
-          st.session_state.vectordb = FAISS.load_local(f"./vector-local-db/{i}",Embeddings,allow_dangerous_deserialization=True)
+          st.session_state.vectordb = FAISS.load_local(f"./vector-local-db/{user_id}/{i}",Embeddings,allow_dangerous_deserialization=True)
           if st.session_state.vectordb:
               st.success('Successfully Loaded vector database.')
           else:
               st.error('Failed to create get database')
+         
   
 # LLM model and chain setup
-llm_model = st.selectbox("Select LLM Model", ["llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")
-chain_type = st.selectbox("Select Chain Type", ["Agentic", "Retrieval"], index=0, key="chain_type")
+ llm_model = st.selectbox("Select LLM Model", [  "llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")
+ chain_type = st.selectbox("Select Chain Type", ["Agentic", "Retrieval"], index=0, key="chain_type")
 
 # Chain or agent setup 
 
 
-if st.button('Setup Chain/Agent'):
+ if st.button('Setup Chain/Agent'):
   
     if st.session_state.vectordb:
         st.session_state.type = agent(st.session_state.vectordb)
@@ -327,13 +337,13 @@ if st.button('Setup Chain/Agent'):
 
 
 # Input for user query
-st.markdown("<div class='input-container'>", unsafe_allow_html=True)
-user_input = st.text_input("Ask a question:", key="user_input", placeholder="Type your question here...")
-submit_button = st.button('Submit', key="submit_button")
-st.markdown("</div>", unsafe_allow_html=True)
+ st.markdown("<div class='input-container'>", unsafe_allow_html=True)
+ user_input = st.text_input("Ask a question:", key="user_input", placeholder="Type your question here...")
+ submit_button = st.button('Submit', key="submit_button")
+ st.markdown("</div>", unsafe_allow_html=True)
 
 # Displaying chat messages
-if submit_button:
+ if submit_button:
   if st.session_state.type:
     if user_input:
         answer = predict_answer()
@@ -348,10 +358,49 @@ if submit_button:
       st.error("No, document retreival chain or agent founded!")
 
 # Error handling
-if Error:
+ if Error:
     st.error(f"An error occurred: {Error}")
 
 # Clear the error after displaying
-Error = ""
+ Error = ""
 
+def login_page():
+    st.markdown("# Login")
+    user_db = os.listdir("vector-local-db")
+    
+    login_tab, create_account_tab = st.tabs(["Login", "Create New Account"])
+
+    # Login Tab
+    with login_tab:
+        st.markdown("### Login")
+        user_id = st.text_input("User ID",  )
+        if st.button("Login"):
+            if user_id in user_db:
+                st.session_state["logged_in"] = True
+                st.session_state["user_id"] = user_id
+            else:
+                st.error("User ID not found. Please try again or create a new account.")
+
+    # Create Account Tab
+    with create_account_tab:
+        st.markdown("### Create New Account")
+        new_user_id = st.text_input("New User ID", key="create_user_id")
+        if st.button("Create Account"):
+            if new_user_id in user_db:
+                st.error("User ID already exists. Please choose a different User ID.")
+            else:
+                os.mkdir(f'./vector-local-db/{new_user_id}')
+                st.session_state["logged_in"] = True
+                st.session_state["user_id"] = new_user_id
+                st.success("Account created successfully!")
+
+# Initialize session state
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+
+# Display the appropriate page based on login status
+if st.session_state["logged_in"]:
+    main(st.session_state["user_id"])
+else:
+    login_page()
 

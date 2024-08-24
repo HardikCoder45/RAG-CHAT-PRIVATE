@@ -5,7 +5,7 @@
     
     {
         "model":"llama3-70b-8192",
-        "api-key":"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"
+        "api-key":"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"
     },
     {
         "model":"mistral-large-2407",
@@ -13,7 +13,7 @@
     },
     {
         "model":"gemma2-9b-it",
-        "api-key":"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"
+        "api-key":"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"
     }
     
     ],

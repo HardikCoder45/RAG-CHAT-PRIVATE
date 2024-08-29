@@ -315,7 +315,7 @@ def main(user_id):
          
   
 # LLM model and chain setup
- llm_model = st.selectbox("Select LLM Model", [  "llama3-70b-8192", "mistral-large-2407", "gemma2-9b-it"], index=0, key="llm_model")
+ llm_model = st.selectbox("Select LLM Model", [  "llama3-70b-8192", "gemma2-9b-it"], index=0, key="llm_model")
  chain_type = st.selectbox("Select Chain Type", ["Agentic", "Retrieval"], index=0, key="chain_type")
 
 # Chain or agent setup 
